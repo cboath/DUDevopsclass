@@ -1,0 +1,45 @@
+
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources: 
+  # Create a role
+  DUClassLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Description: "Role for performing functions in the class"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+        - "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
+        - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+      RoleName: "DUClassLambdaRole"  
+
+
+
+  FunTestTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "EmployeeId"
+          AttributeType: "N"
+      KeySchema:
+        - AttributeName: "EmployeeId"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 10
+      TableName: DuClassUsers
+
+
+
+
+  # Create API gateway

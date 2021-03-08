@@ -1,0 +1,6 @@
+[
+    {
+        "ParameterKey": "s3ARNAccess",
+        "ParameterValue": "arn:aws:s3:::dudevopsclassbucket/*"
+    }
+]

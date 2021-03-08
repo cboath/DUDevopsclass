@@ -1,0 +1,76 @@
+{
+    "DuClassUsers": [
+        {
+            "PutRequest": {
+                "Item": {
+                    "EmployeeId": {
+                        "N": "24601"
+                    },
+                    "Fname": {
+                        "S": "Jean"
+                    },
+                    "LName": {
+                        "S": "Valjean"
+                    },
+                    "LOS": {
+                        "S": "BA"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "EmployeeId": {
+                        "N": "007"
+                    },
+                    "Fname": {
+                        "S": "James"
+                    },
+                    "LName": {
+                        "S": "Bond"
+                    },
+                    "LOS": {
+                        "S": "PE&I"
+                    }
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                    "EmployeeId": {
+                        "N": "2718"
+                    },
+                    "Fname": {
+                        "S": "Leonhard"
+                    },
+                    "LName": {
+                        "S": "Euler"
+                    },
+                    "LOS": {
+                        "S": "DA"
+                    }
+                }
+            }
+        },
+	{
+            "PutRequest": {
+                "Item": {
+                    "EmployeeId": {
+                        "N": "8675309"
+                    },
+                    "Fname": {
+                        "S": "Jenny"
+                    },
+                    "LName": {
+                        "S": "Tutone"
+                    },
+                    "LOS": {
+                        "S": "PM"
+                    }
+                }
+            }
+        }
+    ]
+}
