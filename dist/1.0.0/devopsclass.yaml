@@ -23,9 +23,35 @@ Resources:
         - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
       RoleName: "DUClassLambdaRole"  
 
+  # Create API gateway
+  DuDevOpsApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: DuDevOpsApiGateway
+      Parameters:
+        endpointConfigurationTypes: EDGE
+
+  # Create API Deployment
+  # DUDOCApiDeployment:
+  #   Type: AWS::ApiGateway::Deployment
+  #   # DependsOn:
+  #   #   - 
+  #   Properties:
+  #     RestApiId: !Ref DuDevOpsApiGateway
+
+  # Create API Stage
+  # DUDOCNonProd:
+  #   Type: AWS::ApiGateway::Stage
+  #   DependsOn: DuDevOpsApiGateway
+  #   Properties:
+  #     StageName: "NonProd"
+  #     Description: "Non Prod stage for DUDOC Api Gateway"
+  #     RestApiId: !Ref DuDevOpsApiGateway
+  #     DeploymentId: !Ref DUDOCApiDeployment
 
 
-  FunTestTable:
+  # Create Database table
+  DUClassTable:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
@@ -42,4 +68,4 @@ Resources:
 
 
 
-  # Create API gateway
+  
