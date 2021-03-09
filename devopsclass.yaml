@@ -23,9 +23,16 @@ Resources:
         - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
       RoleName: "DUClassLambdaRole"  
 
+  # Create API gateway
+  DuDevOpsApiGateway:
+    Type: AWS::Apigateway::RestApi
+    Properties:
+      Name: DuDevOpsApiGateway
+      Parameters:
+        endpointConfigurationTypes: EDGE
 
-
-  FunTestTable:
+  # Create Database table
+  DUClassTable:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
@@ -42,4 +49,4 @@ Resources:
 
 
 
-  # Create API gateway
+  
