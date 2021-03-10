@@ -1,6 +1,11 @@
 
 AWSTemplateFormatVersion: "2010-09-09"
 
+Parameters:
+  mappingDbHost:
+    Type: "DuClassUsers"
+
+
 Resources: 
   # Create a role
   DUClassLambdaRole:
@@ -30,6 +35,62 @@ Resources:
       Name: DuDevOpsApiGateway
       Parameters:
         endpointConfigurationTypes: EDGE
+
+  # Create API Gateway Resource
+  DuResource:  
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref "DuDevOpsApiGateway"
+      #ParentId: !GetAtt "SampleLoggerApi.RootResourceId"
+      PathPart: students 
+
+  # Create API Gateway Methods
+  studentGetMethod:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      AuthorizationType: "NONE"
+      HttpMethod: "GET"
+      OperationName: "GetStudents"
+      Integration:
+        IntegrationHttpMethod: "GET"
+        Type: "AWS_PROXY"
+        #  Uri: !Sub
+        #    - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+        #    - lambdaArn: !GetAtt "profilesToDynamoDB.Arn"
+      RestApiId: !Ref DuDevOpsApiGateway
+      ResourceId: !Ref DuResource
+
+  # Create API Gateway Method Options
+  StudentResourceOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId: !Ref "DuDevOpsApiGateway"
+      ResourceId: !Ref "DuResource"
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            ResponseTemplates:
+              application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseModels:
+            application/json: 'Empty'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+
+
 
   # Create API Deployment
   # DUDOCApiDeployment:
@@ -65,6 +126,31 @@ Resources:
         WriteCapacityUnits: 10
       TableName: DuClassUsers
 
+# Create lambda 
+  DuGetLambda:
+    Type: AWS::Lambda::Function 
+    Properties:
+      FunctionName: DuGetLambda
+      Role: !Ref "DUClassLambdaRole"
+      Handler: index.lambdaHandler
+      Runtime: nodejs10.x
+    # Code:
+        # S3Bucket: !Ref "lambdaCodeBucket"
+        # S3Key: !Sub "${apiRelease}/${lambdaSrcKeyPrefix}/lvMicMapping.zip"
+      Environment:
+        Variables:
+          DB_HOST: !Ref "mappingDbHost"
+      Timeout: 60
+
+
+# Lambda Permission For API GateWay
+  lambdaApiGatewayInvokeGetStudents:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt "DuGetLambda"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DuDevOpsApiGateway}/*" #We need to look into this.
 
 
 
