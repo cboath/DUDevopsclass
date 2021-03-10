@@ -8,7 +8,6 @@ for dir in */; do
     npm install --production=true
     npm prune --production=true
     cd ..
-    echo "FARTSSSSSS"
     TREE=$HMWRK/dist/${1}/src/$dir
     TRIMMER=$(echo $TREE | sed 's:/*$::')
     powershell Compress-Archive $WRKIT/$dir $TRIMMER.zip

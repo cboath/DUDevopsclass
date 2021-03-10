@@ -11,13 +11,6 @@ SMILE='\xE2\x98\xBB'
 PENDING='\xE2\x86\x92'
 SRC="src"
 
-echo "fuck"
-CURDIR=$(pwd)
-
-for dir in */; do
-    echo $dir
-done
-
 # if [ -z "$2" ]
 #   then
 #     # Only remove the src if this is not a production release.  This should cut down on time regenerating zip
