@@ -33,7 +33,7 @@ else
   echo "Bucket exists"
 fi
 
-mkdir -p dist/${1}
+mkdir -p dist/${1}/src
 
 echo "Copying template to S3 bucket"
 aws s3 cp devopsclass.yaml s3://$BUCKET_NAME/${1}/devopsclass.yaml
@@ -47,9 +47,12 @@ echo "Copying Parameters to S3 bucket"
 aws s3 cp parameters/dudoc.json s3://$BUCKET_NAME/${1}/dudoc.json
 cp parameters/dudoc.json dist/$1/dudoc.json
 
+#Prepare Lambda
+./bin/prepare-lambda.sh $1
+
 echo "Deploying stack ${STACK_NAME}"
 ./bin/deploy/deploy-stack.sh $1
 
-./bin/current-release.sh -p
+#./bin/current-release.sh -p
 
 read -p "Did it work?"

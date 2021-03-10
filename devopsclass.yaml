@@ -3,7 +3,8 @@ AWSTemplateFormatVersion: "2010-09-09"
 
 Parameters:
   mappingDbHost:
-    Type: "DuClassUsers"
+    Type: String
+    Default: DuClassUsers
 
 
 Resources: 
@@ -39,9 +40,12 @@ Resources:
   # Create API Gateway Resource
   DuResource:  
     Type: 'AWS::ApiGateway::Resource'
+    DependsOn: DuDevOpsApiGateway
     Properties:
       RestApiId: !Ref "DuDevOpsApiGateway"
-      #ParentId: !GetAtt "SampleLoggerApi.RootResourceId"
+      ParentId: !GetAtt
+        - DuDevOpsApiGateway
+        - RootResourceId
       PathPart: students 
 
   # Create API Gateway Methods
@@ -54,9 +58,9 @@ Resources:
       Integration:
         IntegrationHttpMethod: "GET"
         Type: "AWS_PROXY"
-        #  Uri: !Sub
-        #    - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-        #    - lambdaArn: !GetAtt "profilesToDynamoDB.Arn"
+        Uri: !Sub
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "DuGetLambda.Arn"
       RestApiId: !Ref DuDevOpsApiGateway
       ResourceId: !Ref DuResource
 
@@ -90,25 +94,23 @@ Resources:
             method.response.header.Access-Control-Allow-Methods: false
             method.response.header.Access-Control-Allow-Origin: false
 
-
-
   # Create API Deployment
-  # DUDOCApiDeployment:
-  #   Type: AWS::ApiGateway::Deployment
-  #   # DependsOn:
-  #   #   - 
-  #   Properties:
-  #     RestApiId: !Ref DuDevOpsApiGateway
+  DUDOCApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - "studentGetMethod"
+    Properties:
+      RestApiId: !Ref DuDevOpsApiGateway
 
   # Create API Stage
-  # DUDOCNonProd:
-  #   Type: AWS::ApiGateway::Stage
-  #   DependsOn: DuDevOpsApiGateway
-  #   Properties:
-  #     StageName: "NonProd"
-  #     Description: "Non Prod stage for DUDOC Api Gateway"
-  #     RestApiId: !Ref DuDevOpsApiGateway
-  #     DeploymentId: !Ref DUDOCApiDeployment
+  DUDOCNonProd:
+    Type: AWS::ApiGateway::Stage
+    DependsOn: DuDevOpsApiGateway
+    Properties:
+      StageName: "NonProd"
+      Description: "Non Prod stage for DUDOC Api Gateway"
+      RestApiId: !Ref DuDevOpsApiGateway
+      DeploymentId: !Ref DUDOCApiDeployment
 
 
   # Create Database table
@@ -148,7 +150,7 @@ Resources:
     Type: "AWS::Lambda::Permission"
     Properties:
       Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "DuGetLambda"
+      FunctionName: !Ref "DuGetLambda"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DuDevOpsApiGateway}/*" #We need to look into this.
 
