@@ -41,6 +41,7 @@ SRC="src"
 #  rm -f dist/${1}/src/${2}.zip
 #   if [ -d "${SRC}/$2" ]; then
 #     printf " ${ORANGE}${PENDING}${NC} Packaging '${2}' for Lambda ... "
+    rm -rf dist/${1}/src/*
     ./bin/install-and-prune.sh $1 /
 #     PACKAGE_RESULT=$?
 #     if [ $PACKAGE_RESULT == "0" ]; then

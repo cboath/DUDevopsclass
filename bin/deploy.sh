@@ -50,6 +50,9 @@ cp parameters/dudoc.json dist/$1/dudoc.json
 #Prepare Lambda
 ./bin/prepare-lambda.sh $1
 
+#Copy Lambdas
+aws s3 cp --recursive --exclude "*.DS*" dist/${1}/src s3://${BUCKET_NAME}/${1}/lambda-src/
+
 echo "Deploying stack ${STACK_NAME}"
 ./bin/deploy/deploy-stack.sh $1
 

@@ -5,6 +5,8 @@ Parameters:
   mappingDbHost:
     Type: String
     Default: DuClassUsers
+  apiRelease:
+    Type: String
 
 
 Resources: 
@@ -18,13 +20,12 @@ Resources:
           - Effect: Allow
             Principal:
               Service:
-                - ec2.amazonaws.com
+                - lambda.amazonaws.com
             Action:
               - 'sts:AssumeRole'
       Path: /
       Description: "Role for performing functions in the class"
       ManagedPolicyArns:
-        - "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
         - "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
         - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
       RoleName: "DUClassLambdaRole"  
@@ -133,12 +134,12 @@ Resources:
     Type: AWS::Lambda::Function 
     Properties:
       FunctionName: DuGetLambda
-      Role: !Ref "DUClassLambdaRole"
+      Role: !GetAtt DUClassLambdaRole.Arn
       Handler: index.lambdaHandler
       Runtime: nodejs10.x
-    # Code:
-        # S3Bucket: !Ref "lambdaCodeBucket"
-        # S3Key: !Sub "${apiRelease}/${lambdaSrcKeyPrefix}/lvMicMapping.zip"
+      Code:
+        S3Bucket: "dudevopsclassbucket"
+        S3Key: !Sub "${apiRelease}/lambda-src/DuGetLambda.zip"
       Environment:
         Variables:
           DB_HOST: !Ref "mappingDbHost"

@@ -1,6 +1,6 @@
 [
     {
-        "ParameterKey": "s3ARNAccess",
-        "ParameterValue": "arn:aws:s3:::dudevopsclassbucket/*"
+        "ParameterKey": "apiRelease",
+        "ParameterValue": "1.0.2"
     }
 ]
