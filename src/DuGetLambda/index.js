@@ -23,6 +23,6 @@ exports.lambdaHandler = async () => {
       "Access-Control-Allow-Methods": "PUT,POST,GET,OPTIONS",
     },
     statusCode: 200,
-    body: result,
+    body: JSON.stringify(result),
   };
 };
