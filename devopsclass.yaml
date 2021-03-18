@@ -61,7 +61,7 @@ Resources:
       HttpMethod: "GET"
       OperationName: "GetStudents"
       Integration:
-        IntegrationHttpMethod: "GET"
+        IntegrationHttpMethod: "POST"
         Type: "AWS_PROXY"
         Uri: !Sub
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
@@ -157,7 +157,7 @@ Resources:
       Action: "lambda:InvokeFunction"
       FunctionName: !Ref "DuGetLambda"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DuDevOpsApiGateway}/*" #We need to look into this.
+      #SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DuDevOpsApiGateway}/*/*/*" #We need to look into this.
 
 
 
