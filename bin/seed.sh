@@ -2,4 +2,4 @@
 
 aws dynamodb batch-write-item --request-items file://data/DuClass.json
 
-read -p "huh?"
+read -p "Database seeded."

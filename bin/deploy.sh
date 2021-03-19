@@ -1,5 +1,9 @@
 #!/bin/bash
 
+GREEN='\033[1;32m'
+SMILE='\xE2\x98\xBB'
+NC='\033[0m'
+
 if [ -z "$1" ]
     then
         echo "Release not provided"
@@ -39,16 +43,15 @@ echo "Copying template to S3 bucket"
 aws s3 cp devopsclass.yaml s3://$BUCKET_NAME/${1}/devopsclass.yaml
 cp devopsclass.yaml dist/$1/devopsclass.yaml
 
-echo "Copying Tags to S3 bucket"
-aws s3 cp parameters/tags.json s3://$BUCKET_NAME/${1}/tags.json
-cp parameters/tags.json dist/$1/tags.json
-
 echo "Copying Parameters to S3 bucket"
 aws s3 cp parameters/dudoc.json s3://$BUCKET_NAME/${1}/dudoc.json
 cp parameters/dudoc.json dist/$1/dudoc.json
 
 #Prepare Lambda
-./bin/prepare-lambda.sh $1
+rm -rf dist/${1}/src/*
+./bin/install-and-prune.sh $1 /
+
+printf "\n ${GREEN}${SMILE} All functions packaged!${NC}\n\n"
 
 #Copy Lambdas
 aws s3 cp --recursive --exclude "*.DS*" dist/${1}/src s3://${BUCKET_NAME}/${1}/lambda-src/
@@ -56,6 +59,4 @@ aws s3 cp --recursive --exclude "*.DS*" dist/${1}/src s3://${BUCKET_NAME}/${1}/l
 echo "Deploying stack ${STACK_NAME}"
 ./bin/deploy/deploy-stack.sh $1
 
-#./bin/current-release.sh -p
-
-read -p "Did it work?"
+read -p "Check the AWS console for build status.  Press any key to continue."

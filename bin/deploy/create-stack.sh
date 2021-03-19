@@ -12,5 +12,5 @@ if [ -z "$1" ]
     exit
 fi
 printf "\n${CYAN}Stack Creation for Release $1 has been Submitted{NC}\n"
-aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body file://dist/$1/devopsclass.yaml --parameters file://dist/$1/dudoc.json #--tags file://dist/$1/tags.json
+aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body file://dist/$1/devopsclass.yaml --parameters file://dist/$1/dudoc.json
 exit $?
