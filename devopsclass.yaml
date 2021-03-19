@@ -1,4 +1,3 @@
-
 AWSTemplateFormatVersion: "2010-09-09"
 
 Parameters:
@@ -9,7 +8,6 @@ Parameters:
     Type: String
   deploybucket:
     Type: String
-
 
 Resources: 
   # Create a role
@@ -23,7 +21,6 @@ Resources:
             Principal:
               Service:
                 - lambda.amazonaws.com
-                - apigateway.amazonaws.com
             Action:
               - 'sts:AssumeRole'
       Path: /
@@ -31,7 +28,6 @@ Resources:
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
         - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
-        - "arn:aws:iam::aws:policy/AmazonAPIGatewayAdministrator"
       RoleName: "DUClassLambdaRole"  
 
   # Create API gateway
@@ -157,8 +153,3 @@ Resources:
       Action: "lambda:InvokeFunction"
       FunctionName: !Ref "DuGetLambda"
       Principal: "apigateway.amazonaws.com"
-      #SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DuDevOpsApiGateway}/*/*/*" #We need to look into this.
-
-
-
-  
