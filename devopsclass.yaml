@@ -26,7 +26,7 @@ Resources:
       Path: /
       Description: "Role for performing functions in the class"
       ManagedPolicyArns:
-        - "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
+        - "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
         - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
       RoleName: "DUClassLambdaRole"  
 
